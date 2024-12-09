@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysSalaryStandardMapper">
+    
+    <resultMap type="SysSalaryStandard" id="SysSalaryStandardResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="basicSalary"    column="basic_salary"    />
+        <result property="socialSecurity"    column="social_security"    />
+        <result property="allowance"    column="allowance"    />
+        <result property="bonus"    column="bonus"    />
+    </resultMap>
+
+    <sql id="selectSysSalaryStandardVo">
+        select id, name, basic_salary, social_security, allowance, bonus from sys_salary_standard
+    </sql>
+
+    <select id="selectSysSalaryStandardList" parameterType="SysSalaryStandard" resultMap="SysSalaryStandardResult">
+        <include refid="selectSysSalaryStandardVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="basicSalary != null "> and basic_salary = #{basicSalary}</if>
+            <if test="socialSecurity != null "> and social_security = #{socialSecurity}</if>
+            <if test="allowance != null "> and allowance = #{allowance}</if>
+            <if test="bonus != null "> and bonus = #{bonus}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysSalaryStandardById" parameterType="Long" resultMap="SysSalaryStandardResult">
+        <include refid="selectSysSalaryStandardVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysSalaryStandard" parameterType="SysSalaryStandard" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_salary_standard
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="basicSalary != null">basic_salary,</if>
+            <if test="socialSecurity != null">social_security,</if>
+            <if test="allowance != null">allowance,</if>
+            <if test="bonus != null">bonus,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="basicSalary != null">#{basicSalary},</if>
+            <if test="socialSecurity != null">#{socialSecurity},</if>
+            <if test="allowance != null">#{allowance},</if>
+            <if test="bonus != null">#{bonus},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysSalaryStandard" parameterType="SysSalaryStandard">
+        update sys_salary_standard
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="basicSalary != null">basic_salary = #{basicSalary},</if>
+            <if test="socialSecurity != null">social_security = #{socialSecurity},</if>
+            <if test="allowance != null">allowance = #{allowance},</if>
+            <if test="bonus != null">bonus = #{bonus},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysSalaryStandardById" parameterType="Long">
+        delete from sys_salary_standard where id = #{id}
+    </delete>
+
+    <delete id="deleteSysSalaryStandardByIds" parameterType="String">
+        delete from sys_salary_standard where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

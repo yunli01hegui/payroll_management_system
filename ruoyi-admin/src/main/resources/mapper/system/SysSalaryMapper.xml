@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysSalaryMapper">
+    
+    <resultMap type="SysSalary" id="SysSalaryResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="salaryStandardId"    column="salary_standard_id"    />
+        <result property="socialSecurity"    column="social_security"    />
+        <result property="allowance"    column="allowance"    />
+        <result property="bonus"    column="bonus"    />
+        <result property="paymentDate"    column="payment_date"    />
+        <result property="actualSalary"    column="actual_salary"    />
+    </resultMap>
+
+    <sql id="selectSysSalaryVo">
+        select id, user_id, salary_standard_id, social_security, allowance, bonus, payment_date, actual_salary from sys_salary
+    </sql>
+
+    <select id="selectSysSalaryList" parameterType="SysSalary" resultMap="SysSalaryResult">
+        <include refid="selectSysSalaryVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="salaryStandardId != null "> and salary_standard_id = #{salaryStandardId}</if>
+            <if test="socialSecurity != null "> and social_security = #{socialSecurity}</if>
+            <if test="allowance != null "> and allowance = #{allowance}</if>
+            <if test="bonus != null "> and bonus = #{bonus}</if>
+            <if test="paymentDate != null "> and payment_date = #{paymentDate}</if>
+            <if test="actualSalary != null "> and actual_salary = #{actualSalary}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysSalaryById" parameterType="Long" resultMap="SysSalaryResult">
+        <include refid="selectSysSalaryVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysSalary" parameterType="SysSalary" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_salary
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="salaryStandardId != null">salary_standard_id,</if>
+            <if test="socialSecurity != null">social_security,</if>
+            <if test="allowance != null">allowance,</if>
+            <if test="bonus != null">bonus,</if>
+            <if test="paymentDate != null">payment_date,</if>
+            <if test="actualSalary != null">actual_salary,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="salaryStandardId != null">#{salaryStandardId},</if>
+            <if test="socialSecurity != null">#{socialSecurity},</if>
+            <if test="allowance != null">#{allowance},</if>
+            <if test="bonus != null">#{bonus},</if>
+            <if test="paymentDate != null">#{paymentDate},</if>
+            <if test="actualSalary != null">#{actualSalary},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysSalary" parameterType="SysSalary">
+        update sys_salary
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="salaryStandardId != null">salary_standard_id = #{salaryStandardId},</if>
+            <if test="socialSecurity != null">social_security = #{socialSecurity},</if>
+            <if test="allowance != null">allowance = #{allowance},</if>
+            <if test="bonus != null">bonus = #{bonus},</if>
+            <if test="paymentDate != null">payment_date = #{paymentDate},</if>
+            <if test="actualSalary != null">actual_salary = #{actualSalary},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysSalaryById" parameterType="Long">
+        delete from sys_salary where id = #{id}
+    </delete>
+
+    <delete id="deleteSysSalaryByIds" parameterType="String">
+        delete from sys_salary where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysAttendanceRecordsMapper">
+    
+    <resultMap type="SysAttendanceRecords" id="SysAttendanceRecordsResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="date"    column="date"    />
+        <result property="timeIn"    column="time_in"    />
+        <result property="timeOut"    column="time_out"    />
+    </resultMap>
+
+    <sql id="selectSysAttendanceRecordsVo">
+        select id, user_id, date, time_in, time_out from sys_attendance_records
+    </sql>
+
+    <select id="selectSysAttendanceRecordsList" parameterType="SysAttendanceRecords" resultMap="SysAttendanceRecordsResult">
+        <include refid="selectSysAttendanceRecordsVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="date != null "> and date = #{date}</if>
+            <if test="timeIn != null "> and time_in = #{timeIn}</if>
+            <if test="timeOut != null "> and time_out = #{timeOut}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysAttendanceRecordsById" parameterType="Long" resultMap="SysAttendanceRecordsResult">
+        <include refid="selectSysAttendanceRecordsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysAttendanceRecords" parameterType="SysAttendanceRecords" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_attendance_records
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="date != null">date,</if>
+            <if test="timeIn != null">time_in,</if>
+            <if test="timeOut != null">time_out,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="date != null">#{date},</if>
+            <if test="timeIn != null">#{timeIn},</if>
+            <if test="timeOut != null">#{timeOut},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysAttendanceRecords" parameterType="SysAttendanceRecords">
+        update sys_attendance_records
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="date != null">date = #{date},</if>
+            <if test="timeIn != null">time_in = #{timeIn},</if>
+            <if test="timeOut != null">time_out = #{timeOut},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysAttendanceRecordsById" parameterType="Long">
+        delete from sys_attendance_records where id = #{id}
+    </delete>
+
+    <delete id="deleteSysAttendanceRecordsByIds" parameterType="String">
+        delete from sys_attendance_records where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
